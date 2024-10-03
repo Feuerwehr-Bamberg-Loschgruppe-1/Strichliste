@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Gate;
+use App\Models\User;
+
 return [
 
     /*
@@ -87,9 +90,9 @@ return [
     'livewire_loading_delay' => 'default',
 
     'auth' => [
-        'guard' => 'web', // Der Standard-Guard
-        'authorize' => function (\App\Models\User $user) {
-            return $user->is_admin; // Nur Admins haben Zugriff auf das Filament-Backend
+        'guard' => 'web',
+        'authorize' => function (User $user) {
+            return Gate::allows('access-admin', $user); // Nur Admins können auf Filament zugreifen
         },
     ],
 ];
