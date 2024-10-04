@@ -16,6 +16,11 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Split;
 
+
+use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Validation\Rule;
+
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
@@ -33,7 +38,8 @@ class UserResource extends Resource
                     ->icon('heroicon-m-user')
                     ->schema([
                         TextInput::make('name')->required(),
-                        TextInput::make('email')->email()->required()->unique(),
+                        TextInput::make('first_name')->required(),
+                        TextInput::make('email')->email()->required(),
                     ])
                     ->compact(),
                 Section::make('Admin')
@@ -81,6 +87,7 @@ class UserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->sortable(),
+                TextColumn::make('first_name')->sortable(),
                 TextColumn::make('email')->sortable(),
                 IconColumn::make('is_admin')
                     ->label('Admin')
