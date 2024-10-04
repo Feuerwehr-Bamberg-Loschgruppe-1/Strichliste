@@ -15,12 +15,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Split;
-
-
 use Illuminate\Support\Facades\Auth;
-
-use Illuminate\Validation\Rule;
-
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
@@ -52,6 +47,11 @@ class UserResource extends Resource
                             ->inline()
                             ->default(false)
                             ->reactive() // Macht das Feld reaktiv, sodass Änderungen sofort angewendet werden
+                            ->disabled(function ($get) {
+                                // Prüfe, ob der eingeloggte Benutzer seine eigenen Daten bearbeitet
+                                return Auth::user()->id === $get('id'); // Hier wird die Benutzer-ID verglichen
+                            })
+                            ->helperText(fn($get) => Auth::user()->id === $get('id') ? 'Du kannst deinen eigenen Admin-Status nicht ändern.' : null)
                             ->afterStateUpdated(function (callable $set, $state) {
                                 // Wenn der Benutzer zum Admin gemacht wird, setze das Passwortfeld auf erforderlich
                                 if ($state) {

@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Log;
-
 return [
 
     /*
@@ -87,14 +85,4 @@ return [
     */
 
     'livewire_loading_delay' => 'default',
-
-    'auth' => [
-        'guard' => 'web',
-        'authorize' => function (\App\Models\User $user) {
-            // Log-Ausgabe, um zu testen, ob die Funktion aufgerufen wird
-            Log::info('Filament authorize() wurde aufgerufen für Benutzer: ' . $user->email);
-
-            return $user->is_admin;  // Nur Admins haben Zugriff
-        },
-    ],
 ];
