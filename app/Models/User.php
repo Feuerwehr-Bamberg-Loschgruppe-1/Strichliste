@@ -27,6 +27,7 @@ class User extends Authenticatable implements FilamentUser, HasName
         'email',
         'password',
         'is_admin', // Admin-Status
+        'balance', // Guthaben
     ];
 
     /**
@@ -76,5 +77,17 @@ class User extends Authenticatable implements FilamentUser, HasName
     public function getFilamentName(): string
     {
         return "{$this->name} {$this->first_name}";
+    }
+
+    public function bookDrink(Item $item)
+    {
+        $this->balance -= $item->price;
+        $this->save();
+    }
+
+    public function addFunds($amount)
+    {
+        $this->balance += $amount;
+        $this->save();
     }
 }

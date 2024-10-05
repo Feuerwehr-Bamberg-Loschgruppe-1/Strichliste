@@ -88,6 +88,10 @@ class UserResource extends Resource
                 TextColumn::make('name')->sortable(),
                 TextColumn::make('first_name')->sortable(),
                 TextColumn::make('email')->sortable()->icon('heroicon-m-envelope'),
+                TextColumn::make('balance')
+                    ->label('Guthaben')
+                    ->sortable()
+                    ->money('EUR'),
                 IconColumn::make('is_admin')
                     ->label('Admin')
                     ->boolean() // Zeigt verschiedene Icons für true/false an

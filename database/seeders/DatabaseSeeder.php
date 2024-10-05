@@ -22,6 +22,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'alex.gropp95@gmail.com',
             'is_admin' => true, // Admin-Status
             'password' => Hash::make('asg27012212'),
+            'balance' => 0,
+        ]);
+        $this->call([
+            ItemSeeder::class,
         ]);
     }
 }
