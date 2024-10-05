@@ -53,23 +53,26 @@ class User extends Authenticatable
     protected static function booted()
     {
         static::saving(function ($user) {
-            if (!$user->is_admin && !is_null($user->password)) {
-                // Wenn is_admin false und Passwort gesetzt ist, Passwort löschen
-                $user->password = null;
+            // Wenn der Benutzer kein Admin ist und kein Passwort gesetzt hat, das Original-Passwort behalten
+            if (!$user->is_admin && is_null($user->password)) {
+                $user->password = $user->getOriginal('password');
             }
-            if (Auth::check() && !$user->is_admin && Auth::id() === $user->id) {
-                Auth::logout();
-                Session::invalidate();
+
+            // Wenn der Benutzer zum Admin gemacht wird und kein Passwort gesetzt ist, Passwort erforderlich machen
+            if ($user->is_admin && is_null($user->password)) {
+                throw new \Exception('Admin-Benutzer müssen ein Passwort haben.');
             }
         });
 
         static::updated(function ($user) {
+            // Prüfe, ob der is_admin-Status geändert wurde und der Benutzer kein Admin mehr ist
             if ($user->wasChanged('is_admin') && !$user->is_admin) {
-                // Suche die Sessions des Benutzers (Benutzer B) in der Datenbank
+                // Suche alle aktiven Sessions des Benutzers in der Datenbank
                 $sessions = DB::table('sessions')->where('user_id', $user->id)->get();
 
                 foreach ($sessions as $session) {
-                    DB::table('sessions')->where('id', $session->id)->delete(); // Lösche nur die Sessions von Benutzer B
+                    // Lösche jede Session des Benutzers
+                    DB::table('sessions')->where('id', $session->id)->delete();
                 }
             }
         });

@@ -66,16 +66,15 @@ class UserResource extends Resource
                             ->label('Passwort')
                             ->revealable()
                             ->dehydrated(fn($state) => filled($state)) // Speichert nur, wenn ein Passwort gesetzt wird
-                            ->required(fn(callable $get) => $get('is_admin') || $get('password_required')) // Nur erforderlich, wenn Admin oder Passwort später gesetzt werden muss
-                            ->hidden(fn(callable $get) => !$get('is_admin') && !$get('password_required')) // Passwortfeld ausblenden, wenn kein Admin
+                            ->hidden(fn(callable $get) => !$get('is_admin')) // Feld nur anzeigen, wenn is_admin == true
                             ->dehydrateStateUsing(fn($state) => filled($state) ? Hash::make($state) : null), // Passwort hashen, wenn vorhanden
                         TextInput::make('password_confirmation')
                             ->password()
                             ->label('Passwort bestätigen')
                             ->revealable()
-                            ->hidden(fn(callable $get) => !$get('is_admin') && !$get('password_required')) // Bestätigungsfeld ebenfalls ausblenden
                             ->same('password') // Muss dem Passwort entsprechen
-                            ->dehydrated(false), // Nicht speichern
+                            ->dehydrated(false) // Nicht speichern
+                            ->hidden(fn(callable $get) => !$get('is_admin')), // Nur anzeigen, wenn is_admin == true
                     ])
                     ->compact(),
             ])->from('2xl'),
