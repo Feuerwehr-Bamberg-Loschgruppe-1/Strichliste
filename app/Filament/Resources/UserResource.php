@@ -22,7 +22,7 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'sui-users';
 
     public static function form(Form $form): Form
     {
@@ -87,7 +87,7 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('name')->sortable(),
                 TextColumn::make('first_name')->sortable(),
-                TextColumn::make('email')->sortable(),
+                TextColumn::make('email')->sortable()->icon('heroicon-m-envelope'),
                 IconColumn::make('is_admin')
                     ->label('Admin')
                     ->boolean() // Zeigt verschiedene Icons für true/false an

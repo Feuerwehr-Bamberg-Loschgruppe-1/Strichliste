@@ -54,18 +54,6 @@ class User extends Authenticatable implements FilamentUser, HasName
 
     protected static function booted()
     {
-        static::saving(function ($user) {
-            // Wenn der Benutzer kein Admin ist und kein Passwort gesetzt hat, das Original-Passwort behalten
-            if (!$user->is_admin && is_null($user->password)) {
-                $user->password = $user->getOriginal('password');
-            }
-
-            // Wenn der Benutzer zum Admin gemacht wird und kein Passwort gesetzt ist, Passwort erforderlich machen
-            if ($user->is_admin && is_null($user->password)) {
-                throw new \Exception('Admin-Benutzer müssen ein Passwort haben.');
-            }
-        });
-
         static::updated(function ($user) {
             // Prüfe, ob der is_admin-Status geändert wurde und der Benutzer kein Admin mehr ist
             if ($user->wasChanged('is_admin') && !$user->is_admin) {

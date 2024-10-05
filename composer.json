@@ -6,12 +6,17 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "afatmustafa/blade-hugeicons": "^0.0.3",
+        "codeat3/blade-carbon-icons": "^2.29",
         "codeat3/blade-clarity-icons": "^1.9",
+        "codeat3/blade-fluentui-system-icons": "^1.33",
+        "codeat3/blade-system-uicons": "^1.7",
         "filament/filament": "^3.2",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.4",
-        "livewire/volt": "^1.0"
+        "livewire/volt": "^1.0",
+        "mallardduck/blade-lucide-icons": "^1.23"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
