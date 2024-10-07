@@ -78,16 +78,4 @@ class User extends Authenticatable implements FilamentUser, HasName
     {
         return "{$this->name} {$this->first_name}";
     }
-
-    public function bookDrink(Item $item)
-    {
-        $this->balance -= $item->price;
-        $this->save();
-    }
-
-    public function addFunds($amount)
-    {
-        $this->balance += $amount;
-        $this->save();
-    }
 }
