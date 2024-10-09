@@ -95,9 +95,9 @@ class TransactionResource extends Resource
                 //    Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                //Tables\Actions\BulkActionGroup::make([
+                //    Tables\Actions\DeleteBulkAction::make(),
+                //]),
             ])
             ->defaultSort('created_at', 'desc');;
     }
