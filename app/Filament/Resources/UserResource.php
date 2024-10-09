@@ -3,6 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers\TransactionsRelationManager; // Fügen Sie diese Zeile hinzu
+
 use App\Models\User;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -108,6 +110,12 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->label('View Transactions')
+                    ->icon('heroicon-o-eye')
+                    ->modalHeading('Transactions')
+                    ->modalSubheading('View transactions related to this user')
+                    ->modalWidth('lg'),
             ])
             ->bulkActions([
                 //Tables\Actions\BulkActionGroup::make([
@@ -119,7 +127,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            TransactionsRelationManager::class,
         ];
     }
 
