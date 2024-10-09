@@ -10,6 +10,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Livewire\Component;
 
 class TransactionTable extends Component implements HasForms, HasTable
@@ -28,7 +29,11 @@ class TransactionTable extends Component implements HasForms, HasTable
     {
         return TransactionResource::table($table)
             ->query(fn () => TransactionResource::getEloquentQuery())
-            ->modifyQueryUsing(function ($query) {
+            ->modifyQueryUsing(function (Builder $query) {
+                if (! $this->user) {
+                    return;
+                }
+
                 $query->where('user_id', $this->user->id);
             })
             ->recordUrl(fn ($record) => EditTransaction::getUrl(['record' => $record]));
