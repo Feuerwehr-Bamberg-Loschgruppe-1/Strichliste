@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\UserResource\RelationManagers\TransactionsRelationManager; // Fügen Sie diese Zeile hinzu
 use App\Models\User;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Split;
@@ -113,6 +114,8 @@ class UserResource extends Resource
                     ->color('default')
                     ->icon('heroicon-o-banknotes')
                     ->modal(true)
+                    ->modalHeading('Transactions')
+                    ->modalDescription('View transactions related to this user')
                     ->modalContent(
                         fn (User $record): View => view('components.user-transaction-modal', ['user' => $record])
                     )
@@ -129,7 +132,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            TransactionsRelationManager::class,
         ];
     }
 
