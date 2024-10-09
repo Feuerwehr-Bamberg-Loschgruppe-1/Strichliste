@@ -12,23 +12,30 @@ use Illuminate\Support\Facades\Log;
 
 class CreateTransaction extends CreateRecord
 {
+    // Definiert die zugehörige Ressource
     protected static string $resource = TransactionResource::class;
 
     // Diese Methode wird aufgerufen, bevor die Transaktion erstellt wird, um die Formulardaten zu ändern
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        // Überprüft, ob die Kategorie 'booking' ist
         if ($data['category'] === 'booking') {
-            // Abrufen des Produkts und Setzen des amount-Werts auf den Preis des Produkts
+            // Abrufen des Produkts anhand der item_id
             $item = Item::find($data['item_id']);
+            // Wenn das Produkt existiert, setze den amount-Wert auf den Preis des Produkts
             if ($item) {
                 $data['amount'] = $item->price;
             }
-            $data['is_paid'] = false; // Setze is_paid auf false für Buchungen
+            // Setze is_paid auf false für Buchungen
+            $data['is_paid'] = false;
         } elseif ($data['category'] === 'payment') {
-            $data['is_paid'] = null; // Setze is_paid auf null für Zahlungen
-            $data['item_id'] = null; // Setze item_id auf null für Zahlungen
+            // Setze is_paid auf null für Zahlungen
+            $data['is_paid'] = null;
+            // Setze item_id auf null für Zahlungen
+            $data['item_id'] = null;
         }
 
+        // Gibt die modifizierten Daten zurück
         return $data;
     }
 
@@ -54,16 +61,14 @@ class CreateTransaction extends CreateRecord
 
             // Guthaben des Benutzers anpassen
             if ($user) {
+                // Wenn das Guthaben ausreicht, die Buchung als bezahlt markieren und vom Guthaben abziehen
                 if ($user->balance >= $transaction->amount) {
-                    // Wenn das Guthaben ausreicht, die Buchung als bezahlt markieren und vom Guthaben abziehen
                     $user->balance -= $transaction->amount;
                     $transaction->is_paid = true;
-                    Log::info("Booking: User balance after booking: {$user->balance}");
                 } else {
                     // Wenn das Guthaben nicht ausreicht, die Buchung als unbezahlt lassen und Betrag abziehen
                     $user->balance -= $transaction->amount;
                     $transaction->is_paid = false;
-                    Log::info("Booking: User balance after booking (insufficient funds): {$user->balance}");
                 }
                 // Transaktion und Benutzer speichern
                 $transaction->save();
@@ -77,24 +82,20 @@ class CreateTransaction extends CreateRecord
                 ->where('is_paid', false)
                 ->get();
 
-            // Initialisieren des verbleibenden Betrags mit dem Betrag der aktuellen Transaktion
-            $remainingAmount = $transaction->amount;
-            Log::info("Payment: Initial remaining amount: {$remainingAmount}");
-            Log::info("Payment: User initial balance: {$user->balance}");
-
             // Guthaben des Benutzers erhöhen
-            $user->balance += $remainingAmount;
-            Log::info("Payment: User balance after adding payment: {$user->balance}");
+            $user->balance += $transaction->amount;
 
-            // Überprüfen, ob das Guthaben jetzt 0 oder größer ist und offene Transaktionen bezahlt werden können
-            if ($user->balance >= 0) {
-                foreach ($openTransactions as $openTransaction) {
+            // Summe der offenen Transaktionen berechnen
+            $totalOpenAmount = $openTransactions->sum('amount');
+
+            // Überprüfen, ob das Guthaben ausreicht, um offene Transaktionen zu bezahlen
+            foreach ($openTransactions as $openTransaction) {
+                if ($user->balance >= - ($totalOpenAmount - $openTransaction->amount)) {
                     $openTransaction->is_paid = true;
                     $openTransaction->save();
-                    Log::info("Payment: Open transaction marked as paid because user balance is 0 or greater.");
+                    $totalOpenAmount -= $openTransaction->amount;
                 }
             }
-
             // Benutzer speichern
             $user->save();
         }

@@ -32,11 +32,16 @@ class TransactionResource extends Resource
                     }))
                     ->searchable()
                     ->required(),
-                Forms\Components\Select::make('category')
+                Forms\Components\ToggleButtons::make('category')
                     ->label('Category')
+                    ->inline()
                     ->options([
                         'booking' => 'Booking',
                         'payment' => 'Payment',
+                    ])
+                    ->colors([
+                        'booking' => 'warning',
+                        'payment' => 'success',
                     ])
                     ->required()
                     ->reactive(),
@@ -71,6 +76,9 @@ class TransactionResource extends Resource
                     })
                     ->icon(function ($record) {
                         return $record->category === 'booking' ? 'heroicon-o-shopping-cart' : 'bi-cash-coin';
+                    })
+                    ->color(function ($record) {
+                        return $record->category === 'booking' ? 'warning' : 'success';
                     }),
                 Tables\Columns\IconColumn::make('is_paid')
                     ->boolean()
@@ -84,7 +92,7 @@ class TransactionResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                //    Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

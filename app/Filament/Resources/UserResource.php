@@ -91,7 +91,10 @@ class UserResource extends Resource
                 TextColumn::make('balance')
                     ->label('Guthaben')
                     ->sortable()
-                    ->money('EUR'),
+                    ->money('EUR')
+                    ->color(function ($record) {
+                        return $record->balance < 0 ? 'danger' : 'success';
+                    }),
                 IconColumn::make('is_admin')
                     ->label('Admin')
                     ->boolean() // Zeigt verschiedene Icons für true/false an
