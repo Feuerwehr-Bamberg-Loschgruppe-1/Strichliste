@@ -98,6 +98,7 @@ class TransactionsRelationManager extends RelationManager
                 //Tables\Actions\BulkActionGroup::make([
                 //    Tables\Actions\DeleteBulkAction::make(),
                 //]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');;
     }
 }
