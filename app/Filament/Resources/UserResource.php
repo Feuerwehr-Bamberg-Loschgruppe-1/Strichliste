@@ -53,7 +53,7 @@ class UserResource extends Resource
                                 // Prüfe, ob der eingeloggte Benutzer seine eigenen Daten bearbeitet
                                 return Auth::user()->id === $get('id'); // Hier wird die Benutzer-ID verglichen
                             })
-                            ->helperText(fn ($get) => Auth::user()->id === $get('id') ? 'Du kannst deinen eigenen Admin-Status nicht ändern.' : null)
+                            ->helperText(fn($get) => Auth::user()->id === $get('id') ? 'Du kannst deinen eigenen Admin-Status nicht ändern.' : null)
                             ->afterStateUpdated(function (callable $set, $state) {
                                 // Wenn der Benutzer zum Admin gemacht wird, setze das Passwortfeld auf erforderlich
                                 if ($state) {
@@ -67,16 +67,16 @@ class UserResource extends Resource
                             ->password()
                             ->label('Passwort')
                             ->revealable()
-                            ->dehydrated(fn ($state) => filled($state)) // Speichert nur, wenn ein Passwort gesetzt wird
-                            ->hidden(fn (callable $get) => ! $get('is_admin')) // Feld nur anzeigen, wenn is_admin == true
-                            ->dehydrateStateUsing(fn ($state) => filled($state) ? Hash::make($state) : null), // Passwort hashen, wenn vorhanden
+                            ->dehydrated(fn($state) => filled($state)) // Speichert nur, wenn ein Passwort gesetzt wird
+                            ->hidden(fn(callable $get) => ! $get('is_admin')) // Feld nur anzeigen, wenn is_admin == true
+                            ->dehydrateStateUsing(fn($state) => filled($state) ? Hash::make($state) : null), // Passwort hashen, wenn vorhanden
                         TextInput::make('password_confirmation')
                             ->password()
                             ->label('Passwort bestätigen')
                             ->revealable()
                             ->same('password') // Muss dem Passwort entsprechen
                             ->dehydrated(false) // Nicht speichern
-                            ->hidden(fn (callable $get) => ! $get('is_admin')), // Nur anzeigen, wenn is_admin == true
+                            ->hidden(fn(callable $get) => ! $get('is_admin')), // Nur anzeigen, wenn is_admin == true
                     ])
                     ->compact(),
             ])->from('2xl'),
@@ -109,18 +109,18 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('transactions')
-                    ->color('default')
+                    ->color('warning')
                     ->icon('heroicon-o-banknotes')
                     ->modal(true)
                     ->modalHeading('Transactions')
                     ->modalDescription('View transactions related to this user')
                     ->modalContent(
-                        fn (User $record): View => view('components.user-transaction-modal', ['user' => $record])
+                        fn(User $record): View => view('components.user-transaction-modal', ['user' => $record])
                     )
                     ->modalWidth(MaxWidth::FiveExtraLarge)
                     ->modalSubmitAction(false),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 //Tables\Actions\BulkActionGroup::make([

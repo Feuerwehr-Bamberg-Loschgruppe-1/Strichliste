@@ -28,15 +28,17 @@ class TransactionTable extends Component implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return TransactionResource::table($table)
-            ->query(fn () => TransactionResource::getEloquentQuery())
+            ->query(fn() => TransactionResource::getEloquentQuery())
             ->modifyQueryUsing(function (Builder $query) {
                 if (! $this->user) {
                     return;
                 }
 
                 $query->where('user_id', $this->user->id);
-            })
-            ->recordUrl(fn ($record) => EditTransaction::getUrl(['record' => $record]));
+            });
+        //->recordUrl(
+        //fn($record) => EditTransaction::getUrl(['record' => $record])
+        //);
     }
 
     public function render(): string

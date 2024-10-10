@@ -31,10 +31,10 @@ class ItemResource extends Resource
                     ->options(ItemType::class)
                     ->required()
                     ->reactive()
-                    ->afterStateUpdated(fn (callable $set, $state) => $set('drink_type', $state === 'drink' ? 'non_alcoholic' : null)),
+                    ->afterStateUpdated(fn(callable $set, $state) => $set('drink_type', $state === 'drink' ? 'non_alcoholic' : null)),
                 Select::make('drink_type')
                     ->options(DrinkType::class)
-                    ->hidden(fn (callable $get) => $get('type') !== 'drink'),
+                    ->hidden(fn(callable $get) => $get('type') !== 'drink'),
                 TextInput::make('price')
                     ->numeric()
                     ->required(),
@@ -50,7 +50,7 @@ class ItemResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->sortable()->searchable(),
+                TextColumn::make('name')->sortable(),
                 TextColumn::make('type')
                     ->label('Typ')
                     ->badge()
