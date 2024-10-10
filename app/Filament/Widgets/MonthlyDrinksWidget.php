@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 
 class MonthlyDrinksWidget extends BaseWidget
 {
@@ -60,7 +61,23 @@ class MonthlyDrinksWidget extends BaseWidget
     {
         return $table
             ->query($this->getTableQuery())
-            ->columns($this->getTableColumns());
+            ->columns($this->getTableColumns())
+            ->filters([
+                SelectFilter::make('year')
+                    ->label('Jahr')
+                    ->options($this->getAvailableYears())
+                //->default(now()->year),  // Standardmäßig das aktuelle Jahr
+            ]);
+    }
+
+    protected function getAvailableYears(): array
+    {
+        return Transaction::query()
+            ->selectRaw('strftime("%Y", created_at) as year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year', 'year')
+            ->toArray();
     }
 
     protected int|string|array $columnSpan = 'full';
