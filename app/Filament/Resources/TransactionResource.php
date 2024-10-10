@@ -3,17 +3,14 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TransactionResource\Pages;
-use App\Filament\Resources\TransactionResource\RelationManagers;
+use App\Models\Item;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Models\Item;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TransactionResource extends Resource
 {
@@ -28,7 +25,7 @@ class TransactionResource extends Resource
                 Forms\Components\Select::make('user_id')
                     ->label('User')
                     ->options(User::all()->mapWithKeys(function ($user) {
-                        return [$user->id => $user->name . ' ' . $user->first_name];
+                        return [$user->id => $user->name.' '.$user->first_name];
                     }))
                     ->searchable()
                     ->required(),
@@ -50,13 +47,13 @@ class TransactionResource extends Resource
                     ->options(Item::all()->pluck('name', 'id'))
                     ->searchable()
                     ->nullable() // Make item_id nullable
-                    ->required(fn($get) => $get('category') === 'booking')
-                    ->visible(fn($get) => $get('category') === 'booking'),
+                    ->required(fn ($get) => $get('category') === 'booking')
+                    ->visible(fn ($get) => $get('category') === 'booking'),
                 Forms\Components\TextInput::make('amount')
                     ->label('Amount')
                     ->numeric()
-                    ->required(fn($get) => $get('category') === 'payment')
-                    ->visible(fn($get) => $get('category') === 'payment'),
+                    ->required(fn ($get) => $get('category') === 'payment')
+                    ->visible(fn ($get) => $get('category') === 'payment'),
             ]);
     }
 
@@ -99,7 +96,7 @@ class TransactionResource extends Resource
                 //    Tables\Actions\DeleteBulkAction::make(),
                 //]),
             ])
-            ->defaultSort('created_at', 'desc');;
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
