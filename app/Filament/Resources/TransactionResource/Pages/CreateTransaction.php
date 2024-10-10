@@ -31,8 +31,6 @@ class CreateTransaction extends CreateRecord
         } elseif ($data['category'] === 'payment') {
             // Setze is_paid auf null für Zahlungen
             $data['is_paid'] = null;
-            // Setze item_id auf null für Zahlungen
-            $data['item_id'] = null;
         }
 
         // Gibt die modifizierten Daten zurück
@@ -99,5 +97,10 @@ class CreateTransaction extends CreateRecord
             // Benutzer speichern
             $user->save();
         }
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

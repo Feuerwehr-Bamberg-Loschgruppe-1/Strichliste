@@ -45,4 +45,9 @@ class CreateInventoryEntry extends CreateRecord
         // Rückgabe eines der erstellten Einträge, um die Methode zu erfüllen
         return $inventoryEntry;
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }
