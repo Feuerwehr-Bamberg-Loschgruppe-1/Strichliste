@@ -3,11 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
@@ -50,6 +49,7 @@ class User extends Authenticatable implements FilamentUser, HasName
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
     }
 
@@ -57,7 +57,7 @@ class User extends Authenticatable implements FilamentUser, HasName
     {
         static::updated(function ($user) {
             // Prüfe, ob der is_admin-Status geändert wurde und der Benutzer kein Admin mehr ist
-            if ($user->wasChanged('is_admin') && !$user->is_admin) {
+            if ($user->wasChanged('is_admin') && ! $user->is_admin) {
                 // Suche alle aktiven Sessions des Benutzers in der Datenbank
                 $sessions = DB::table('sessions')->where('user_id', $user->id)->get();
 
@@ -81,7 +81,7 @@ class User extends Authenticatable implements FilamentUser, HasName
 
     public function getFullNameAttribute()
     {
-        return $this->name . ' ' . $this->first_name;
+        return $this->name.' '.$this->first_name;
     }
 
     public function transactions()
