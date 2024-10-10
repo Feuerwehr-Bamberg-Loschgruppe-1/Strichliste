@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Enums\DrinkType;
+use App\Enums\ItemType;
 use App\Filament\Resources\ItemResource\Pages;
 use App\Models\Item;
 use Filament\Forms\Components\Select;
@@ -27,10 +28,7 @@ class ItemResource extends Resource
                 TextInput::make('name')
                     ->required(),
                 Select::make('type')
-                    ->options([
-                        'drink' => 'Getränk',
-                        'food' => 'Snack',
-                    ])
+                    ->options(ItemType::class)
                     ->required()
                     ->reactive()
                     ->afterStateUpdated(fn (callable $set, $state) => $set('drink_type', $state === 'drink' ? 'non_alcoholic' : null)),
@@ -57,34 +55,7 @@ class ItemResource extends Resource
                     ->label('Typ')
                     ->badge()
                     ->icon('heroicon-m-envelope')
-                    ->sortable()
-                    ->formatStateUsing(function ($state) {
-                        if ($state === 'drink') {
-                            return 'Getränk';
-                        } elseif ($state === 'food') {
-                            return 'Essen';
-                        }
-
-                        return $state;
-                    })
-                    ->icon(function ($state) {
-                        if ($state === 'drink') {
-                            return 'carbon-drink-01';
-                        } elseif ($state === 'food') {
-                            return 'fluentui-food-apple-20-o';
-                        }
-
-                        return null;
-                    })
-                    ->color(function ($state) {
-                        if ($state === 'drink') {
-                            return 'info';
-                        } elseif ($state === 'food') {
-                            return 'warning';
-                        }
-
-                        return null;
-                    }),
+                    ->sortable(),
                 TextColumn::make('drink_type')
                     ->badge()
                     ->label('Getränketyp')
