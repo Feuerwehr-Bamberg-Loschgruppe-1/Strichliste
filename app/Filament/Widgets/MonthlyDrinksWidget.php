@@ -46,7 +46,7 @@ class MonthlyDrinksWidget extends BaseWidget
 
         foreach ($items as $item) {
             $columns[] = TextColumn::make($item->name)
-                // ->label($item->name)
+                ->label($item->name)
                 ->formatStateUsing(function ($state, $record) use ($item) {
                     return $record->{$item->name} ?? 0;
                 })
@@ -62,4 +62,6 @@ class MonthlyDrinksWidget extends BaseWidget
             ->query($this->getTableQuery())
             ->columns($this->getTableColumns());
     }
+
+    protected int|string|array $columnSpan = 'full';
 }
