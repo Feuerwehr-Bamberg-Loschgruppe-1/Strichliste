@@ -35,10 +35,11 @@ class TransactionTable extends Component implements HasForms, HasTable
                 }
 
                 $query->where('user_id', $this->user->id);
-            });
-        //->recordUrl(
-        //fn($record) => EditTransaction::getUrl(['record' => $record])
-        //);
+            })
+            //->recordUrl(
+            //fn($record) => EditTransaction::getUrl(['record' => $record])
+            //)
+            ->defaultSort('created_at', "desc");
     }
 
     public function render(): string
