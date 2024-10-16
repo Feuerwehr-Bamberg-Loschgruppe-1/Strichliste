@@ -15,16 +15,23 @@ class MonthlyDrinksWidget extends BaseWidget
 {
     protected int|string|array $columnSpan = 'full';
 
-    public $selectedYear;
+    public $currentYear;
+    public $availableYears = [];
 
     public function mount()
     {
-        $this->selectedYear = now()->year;
+        $this->availableYears = $this->getAvailableYears();
+        $this->currentYear = $this->availableYears[0] ?? now()->year; // Standardmäßig erstes verfügbares Jahr oder aktuelles Jahr
+    }
+
+    public function setYear($year)
+    {
+        $this->currentYear = $year;
     }
 
     protected function getTableQuery(): Builder
     {
-        $year = $this->selectedYear;
+        $year = $this->currentYear;
 
         $items = Item::where('type', 'drink')->get();
 
@@ -79,5 +86,11 @@ class MonthlyDrinksWidget extends BaseWidget
         return $table
             ->query($this->getTableQuery())
             ->columns($this->getTableColumns());
+    }
+
+    protected function getView(): string
+    {
+        // Rückgabe des Pfads zur Blade-Datei
+        return 'filament.widgets.monthly-drinks-widget';
     }
 }
