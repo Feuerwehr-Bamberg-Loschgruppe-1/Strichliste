@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Contracts\View\View;
 
 class MonthlyDrinksWidget extends BaseWidget
 {
@@ -88,9 +89,14 @@ class MonthlyDrinksWidget extends BaseWidget
             ->columns($this->getTableColumns());
     }
 
-    protected function getView(): string
+    public function render(): View
     {
-        // Rückgabe des Pfads zur Blade-Datei
-        return 'filament.widgets.monthly-drinks-widget';
+        $years = $this->getAvailableYears();
+        $currentYear = $this->currentYear; // Angenommen, Sie haben eine Eigenschaft für das aktuelle Jahr
+
+        return view('filament.widgets.monthly-drinks-widget', [
+            'availableYears' => $years,
+            'currentYear' => $currentYear,
+        ]);
     }
 }
