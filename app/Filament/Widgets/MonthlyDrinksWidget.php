@@ -4,20 +4,27 @@ namespace App\Filament\Widgets;
 
 use App\Models\Transaction;
 use App\Models\Item;
-use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 
 class MonthlyDrinksWidget extends BaseWidget
 {
+    protected int|string|array $columnSpan = 'full';
+
+    public $selectedYear;
+
+    public function mount()
+    {
+        $this->selectedYear = now()->year;
+    }
+
     protected function getTableQuery(): Builder
     {
-        $year = now()->year;
+        $year = $this->selectedYear;
 
         $items = Item::where('type', 'drink')->get();
 
@@ -28,7 +35,7 @@ class MonthlyDrinksWidget extends BaseWidget
 
         return Transaction::query()
             ->selectRaw(implode(', ', $selects))
-            ->selectRaw('strftime("%m", transactions.created_at) || "-" || items.id as id') // Eindeutige ID
+            ->selectRaw('strftime("%m", transactions.created_at) || "-" || items.id as id')
             ->join('items', 'transactions.item_id', '=', 'items.id')
             ->whereYear('transactions.created_at', $year)
             ->groupBy('month')
@@ -57,19 +64,6 @@ class MonthlyDrinksWidget extends BaseWidget
         return $columns;
     }
 
-    public function table(Table $table): Table
-    {
-        return $table
-            ->query($this->getTableQuery())
-            ->columns($this->getTableColumns())
-            ->filters([
-                SelectFilter::make('year')
-                    ->label('Jahr')
-                    ->options($this->getAvailableYears())
-                //->default(now()->year),  // Standardmäßig das aktuelle Jahr
-            ]);
-    }
-
     protected function getAvailableYears(): array
     {
         return Transaction::query()
@@ -80,5 +74,10 @@ class MonthlyDrinksWidget extends BaseWidget
             ->toArray();
     }
 
-    protected int|string|array $columnSpan = 'full';
+    public function table(Table $table): Table
+    {
+        return $table
+            ->query($this->getTableQuery())
+            ->columns($this->getTableColumns());
+    }
 }
