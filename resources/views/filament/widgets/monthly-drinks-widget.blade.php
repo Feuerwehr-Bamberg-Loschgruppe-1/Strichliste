@@ -1,18 +1,22 @@
 <div>
-    <!-- Tab Navigation -->
-    <x-filament::tabs label="Getränke pro Monat">
-        @foreach ($availableYears as $year)
-            <x-filament::tabs.item
-                wire:click="setYear({{ $year }})"
-                :active="$currentYear == $year"
-            >
-                {{ $year }}
-            </x-filament::tabs.item>
-        @endforeach
-    </x-filament::tabs>
+    <x-filament::section>
+        <x-slot name="heading">
+            Monatliche Getränke
+        </x-slot>
+        <!-- Tab Navigation -->
+        <x-filament::tabs label="Getränke pro Monat" class="flex justify-center max-w-max">
+            @foreach ($availableYears as $year)
+                <x-filament::tabs.item
+                    wire:click="setYear({{ $year }})"
+                    :active="$currentYear == $year"
+                >
+                    {{ $year }}
+                </x-filament::tabs.item>
+            @endforeach
+        </x-filament::tabs>
 
-    <!-- Tabelle mit wire:key neu laden, wenn forceRerender sich ändert -->
-    <div class="mt-4">
-        {{ $this->table }}
-    </div>
+        <div class="mt-4">
+            {{ $this->table }}
+        </div>
+    </x-filament::section>
 </div>

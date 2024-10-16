@@ -28,6 +28,7 @@ class MonthlyDrinksWidget extends BaseWidget
     public function setYear($year)
     {
         $this->currentYear = $year;
+        $this->resetTable();
     }
 
     protected function getTableQuery(): Builder
@@ -77,7 +78,7 @@ class MonthlyDrinksWidget extends BaseWidget
         return Transaction::query()
             ->selectRaw('strftime("%Y", created_at) as year')
             ->distinct()
-            ->orderBy('year', 'desc')
+            ->orderBy('year', 'asc')
             ->pluck('year', 'year')
             ->toArray();
     }
@@ -86,7 +87,10 @@ class MonthlyDrinksWidget extends BaseWidget
     {
         return $table
             ->query($this->getTableQuery())
-            ->columns($this->getTableColumns());
+            ->columns($this->getTableColumns())
+            ->heading('')
+            ->paginated(false)
+            ->striped();
     }
 
     public function render(): View
