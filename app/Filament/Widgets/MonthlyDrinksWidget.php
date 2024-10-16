@@ -10,21 +10,30 @@ use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Contracts\View\View;
 
 class MonthlyDrinksWidget extends BaseWidget
 {
     protected int|string|array $columnSpan = 'full';
 
-    public $selectedYear;
+    public $currentYear;
+    public $availableYears = [];
 
     public function mount()
     {
-        $this->selectedYear = now()->year;
+        $this->availableYears = $this->getAvailableYears();
+        $this->currentYear = $this->availableYears[0] ?? now()->year; // Standardmäßig erstes verfügbares Jahr oder aktuelles Jahr
+    }
+
+    public function setYear($year)
+    {
+        $this->currentYear = $year;
+        $this->resetTable();
     }
 
     protected function getTableQuery(): Builder
     {
-        $year = $this->selectedYear;
+        $year = $this->currentYear;
 
         $items = Item::where('type', 'drink')->get();
 
@@ -69,7 +78,7 @@ class MonthlyDrinksWidget extends BaseWidget
         return Transaction::query()
             ->selectRaw('strftime("%Y", created_at) as year')
             ->distinct()
-            ->orderBy('year', 'desc')
+            ->orderBy('year', 'asc')
             ->pluck('year', 'year')
             ->toArray();
     }
@@ -78,6 +87,20 @@ class MonthlyDrinksWidget extends BaseWidget
     {
         return $table
             ->query($this->getTableQuery())
-            ->columns($this->getTableColumns());
+            ->columns($this->getTableColumns())
+            ->heading('')
+            ->paginated(false)
+            ->striped();
+    }
+
+    public function render(): View
+    {
+        $years = $this->getAvailableYears();
+        $currentYear = $this->currentYear; // Angenommen, Sie haben eine Eigenschaft für das aktuelle Jahr
+
+        return view('filament.widgets.monthly-drinks-widget', [
+            'availableYears' => $years,
+            'currentYear' => $currentYear,
+        ]);
     }
 }
