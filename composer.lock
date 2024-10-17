@@ -414,16 +414,16 @@
         },
         {
             "name": "codeat3/blade-carbon-icons",
-            "version": "2.29.0",
+            "version": "2.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeat3/blade-carbon-icons.git",
-                "reference": "037d985eaa1e047107730d18fe1576a725a43be9"
+                "reference": "38a456d03a796a40c4bf6fffbf268a8443b10bc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeat3/blade-carbon-icons/zipball/037d985eaa1e047107730d18fe1576a725a43be9",
-                "reference": "037d985eaa1e047107730d18fe1576a725a43be9",
+                "url": "https://api.github.com/repos/codeat3/blade-carbon-icons/zipball/38a456d03a796a40c4bf6fffbf268a8443b10bc1",
+                "reference": "38a456d03a796a40c4bf6fffbf268a8443b10bc1",
                 "shasum": ""
             },
             "require": {
@@ -474,7 +474,7 @@
             ],
             "support": {
                 "issues": "https://github.com/codeat3/blade-carbon-icons/issues",
-                "source": "https://github.com/codeat3/blade-carbon-icons/tree/2.29.0"
+                "source": "https://github.com/codeat3/blade-carbon-icons/tree/2.30.0"
             },
             "funding": [
                 {
@@ -482,7 +482,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-08-28T13:05:30+00:00"
+            "time": "2024-10-16T19:14:37+00:00"
         },
         {
             "name": "codeat3/blade-clarity-icons",
