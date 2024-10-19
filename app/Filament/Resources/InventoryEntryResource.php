@@ -66,6 +66,7 @@ class InventoryEntryResource extends Resource
                 Tables\Columns\TextColumn::make('items_per_container')->label('Artikel pro Container'),
                 Tables\Columns\TextColumn::make('total_price')->label('Gesamtpreis'),
                 Tables\Columns\TextColumn::make('price_per_item')->label('Preis pro Artikel'),
+                Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable(),
             ])->defaultSort('created_at', 'desc')
             ->filters([
                 //
