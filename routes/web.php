@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'home');
+Route::view('/', 'index');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -18,3 +18,5 @@ use App\Http\Controllers\UserController;
 
 Route::post('/users/{user}/book-drink/{item}', [UserController::class, 'bookDrink']);
 Route::post('/users/{user}/pay', [UserController::class, 'pay']);
+
+Route::get('/', [UserController::class, 'index']);

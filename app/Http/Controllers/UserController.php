@@ -71,4 +71,21 @@ class UserController extends Controller
         // Erfolgsnachricht und aktuelles Guthaben zurückgeben
         return response()->json(['message' => 'Payment processed successfully', 'balance' => $user->balance]);
     }
+
+    public function index()
+    {
+        $users = User::with(['transactions' => function ($query) {
+            $query->where('is_paid', false);
+        }, 'transactions.item'])->get();
+
+        foreach ($users as $user) {
+            $user->items = $user->transactions->groupBy(function ($transaction) {
+                return $transaction->item->name;
+            })->map(function ($group) {
+                return $group->count();
+            })->toArray();
+        }
+
+        return view('index', compact('users'));
+    }
 }
